@@ -2,7 +2,7 @@ import Sequelize from '@sequelize/core';
 const Op = Sequelize.Op;
 import { authenticateSessionToken, validateIncomingParameters, getDbObject, getSequelizeObject, formatSuccessResponse, formatErrorResponse } from '../../../utils/helpers';
 import parameters from "./parameters";
-import { getQuery, formatResult } from '../../../sql_queries/getWallPostsForUser';
+import { getQuery, formatResult } from '../../../db/sql_queries/getWallPostsForUser';
 
 export default async (request) => {
 	try{
