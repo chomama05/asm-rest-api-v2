@@ -318,7 +318,14 @@ export const getDbObject = async (resourceName, includeAssociations = true) => {
         const belongsToResourceName = belongsTo.modelName;
         const belongsToModelObject = MODELS[belongsToResourceName];
         const belongsToModel = sequelize.define(belongsToResourceName, belongsToModelObject, { tableName: belongsToResourceName, timestamps: false});
-        dbObject.belongsTo(belongsToModel, { foreignKey: belongsTo.foreignKey, targetKey: belongsTo.targetKey, as: belongsTo.as, scope: belongsTo.scope, constraints: belongsTo.constraints, foreignKeyConstraint: belongsTo.foreignKeyConstraint });
+        const belongsToOptions = { foreignKey: belongsTo.foreignKey, targetKey: belongsTo.targetKey, as: belongsTo.as, scope: belongsTo.scope };
+        // Map both old option names to the new Sequelize v7 option name
+        if (belongsTo.constraints !== undefined) {
+          belongsToOptions.foreignKeyConstraints = belongsTo.constraints;
+        } else if (belongsTo.foreignKeyConstraint !== undefined) {
+          belongsToOptions.foreignKeyConstraints = belongsTo.foreignKeyConstraint;
+        }
+        dbObject.belongsTo(belongsToModel, belongsToOptions);
       }
     }
     // Has One
@@ -328,7 +335,11 @@ export const getDbObject = async (resourceName, includeAssociations = true) => {
         const hasOneResourceName = hasOne.modelName;
         const hasOneModelObject = MODELS[hasOneResourceName];
         const hasOneModel = sequelize.define(hasOneResourceName, hasOneModelObject, { tableName: hasOneResourceName, timestamps: false});
-        dbObject.hasOne(hasOneModel, { foreignKey: hasOne.foreignKey, sourceKey: hasOne.sourceKey, as: hasOne.as, scope: hasOne.scope, constraints: hasOne.constraints });
+        const hasOneOptions = { foreignKey: hasOne.foreignKey, sourceKey: hasOne.sourceKey, as: hasOne.as, scope: hasOne.scope };
+        if (hasOne.constraints !== undefined) {
+          hasOneOptions.foreignKeyConstraints = hasOne.constraints;
+        }
+        dbObject.hasOne(hasOneModel, hasOneOptions);
       }
     }
     // Has Many
@@ -338,8 +349,11 @@ export const getDbObject = async (resourceName, includeAssociations = true) => {
         const hasManyResourceName = hasMany.modelName;
         const hasManyModelObject = MODELS[hasManyResourceName];
         const hasManyModel = sequelize.define(hasManyResourceName, hasManyModelObject, { tableName: hasManyResourceName, timestamps: false});
-
-        dbObject.hasMany(hasManyModel, { foreignKey: hasMany.foreignKey, sourceKey: hasMany.sourceKey, targetKey: hasMany.targetKey, as: hasMany.as, scope: hasMany.scope, constraints: hasMany.constraints });
+        const hasManyOptions = { foreignKey: hasMany.foreignKey, sourceKey: hasMany.sourceKey, targetKey: hasMany.targetKey, as: hasMany.as, scope: hasMany.scope };
+        if (hasMany.constraints !== undefined) {
+          hasManyOptions.foreignKeyConstraints = hasMany.constraints;
+        }
+        dbObject.hasMany(hasManyModel, hasManyOptions);
       }
     }
   }

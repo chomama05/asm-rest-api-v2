@@ -1,5 +1,8 @@
-import { authenticateSessionToken, validateIncomingParameters, getDbObject, formatSuccessResponse, formatErrorResponse } from '../../../utils/helpers';
+import Sequelize from '@sequelize/core';
+const Op = Sequelize.Op;
+import { authenticateSessionToken, validateIncomingParameters, getDbObject, getSequelizeObject, formatSuccessResponse, formatErrorResponse } from '../../../utils/helpers';
 import parameters from "./parameters";
+import { getQuery, formatResult } from '../../../sql_queries/getWallPostsForUser';
 
 export default async (request) => {
 	try{
@@ -35,9 +38,15 @@ export default async (request) => {
     usersForRegions = [...new Set(usersForRegions)];
     const usersForRegionsArray = usersForRegions.filter((user) => user.RealUsername !==  '' ).map((obj) => obj.RealUsername);
 
+		const SQL = getQuery(usersForRegionsArray, sortDirection, limit, offset);
+
+		const sequelize = await getSequelizeObject();
+    const queryResult = await sequelize.query(SQL, { type: sequelize.QueryTypes.SELECT });
+
+    const response = await formatResult(queryResult).catch((err) => { console.error(err); return throwError(500, 'SQL Error - Could not format response') });
 
 		return formatSuccessResponse(request, {
-			data: { usersForRegionsArray, userId, path, query, body },
+			data: response,
 		});
 	}
 	catch(err){
