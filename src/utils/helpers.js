@@ -3,9 +3,68 @@ import { MODELS, MODEL_ASSOCIATIONS } from '../db/models';
 import { z } from 'zod';
 
 // Format a success response
-export const formatSuccessResponse = async (request, { data = undefined, statusCode = 200, extraHeaders = {}, keepDBAlive = false }) => {
+// Supports two call patterns:
+// 1. formatSuccessResponse(request, data, statusCode)
+// 2. formatSuccessResponse(request, { data, statusCode, extraHeaders, keepDBAlive, responseSchema })
+export const formatSuccessResponse = async (request, dataOrOptions, statusCodeParam = undefined) => {
 	const sequelize = await sequelizeAdapter.getSequelize(false);
+
+	// Handle both call patterns
+	let data, statusCode, extraHeaders, keepDBAlive, responseSchema;
+
+	if (Array.isArray(dataOrOptions) || (typeof dataOrOptions !== 'object' && dataOrOptions !== undefined)) {
+		// Pattern 1: formatSuccessResponse(request, data, statusCode)
+		data = dataOrOptions;
+		statusCode = statusCodeParam || 200;
+		extraHeaders = {};
+		keepDBAlive = false;
+		responseSchema = undefined;
+	} else {
+		// Pattern 2: formatSuccessResponse(request, { data, statusCode, ... })
+		data = dataOrOptions?.data;
+		statusCode = dataOrOptions?.statusCode || 200;
+		extraHeaders = dataOrOptions?.extraHeaders || {};
+		keepDBAlive = dataOrOptions?.keepDBAlive || false;
+		responseSchema = dataOrOptions?.responseSchema;
+	}
+
 	const headers = extraHeaders && Object.keys(extraHeaders).length > 0 ? { ...request.headers, ...extraHeaders } : request.headers;
+
+	// Response validation (if schema provided)
+	if (responseSchema) {
+		const validationMode = process.env.RESPONSE_VALIDATION || 'disabled';
+
+		try {
+			responseSchema.parse(data);
+		} catch (error) {
+			if (error instanceof z.ZodError) {
+				const errorMessage = formatZodError(error);
+				const validationError = `Response validation failed: ${errorMessage}`;
+
+				if (validationMode === 'strict') {
+					// In strict mode (development/test), close connection and throw formatted error
+					if(sequelize && !keepDBAlive){
+						console.log('Closing Sequelize connection');
+						await sequelize.close();
+					}
+					console.error(validationError);
+					console.error('Response data:', JSON.stringify(data, null, 2));
+					// Throw error object that formatErrorResponse can handle
+					const validationErrorObj = {
+						statusCode: 412,
+						message: `Response validation failed: The API response does not match the expected schema. ${errorMessage}`,
+					};
+					return formatErrorResponse(request, validationErrorObj);
+				} else if (validationMode === 'log') {
+					// In log mode (production), log warning but continue
+					console.warn(validationError);
+					console.warn('Response data:', JSON.stringify(data, null, 2));
+					// Continue with response
+				}
+				// If disabled, skip validation entirely
+			}
+		}
+	}
 
 	// Close the Sequelize connection before returning the response
 	if(sequelize && !keepDBAlive){
@@ -72,7 +131,7 @@ export const throwError = async (statusCode, message) => {
 }
 
 export const authenticateSessionToken = async (request) => {
-	console.log('request.headers', request.headers);
+
   // Look for x-session-token header and x-username header
   if(!request.headers.get('x-session-token') || request.headers.get('x-session-token') === ''){
     console.log('Missing x-session-token Header - Returning 401');

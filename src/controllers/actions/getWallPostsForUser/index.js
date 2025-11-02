@@ -1,7 +1,7 @@
 import Sequelize from '@sequelize/core';
 const Op = Sequelize.Op;
-import { authenticateSessionToken, validateIncomingParameters, getDbObject, getSequelizeObject, formatSuccessResponse, formatErrorResponse } from '../../../utils/helpers';
-import parameters from "./parameters";
+import { authenticateSessionToken, validateIncomingParameters, getDbObject, getSequelizeObject, formatSuccessResponse, formatErrorResponse, throwError } from '../../../utils/helpers';
+import * as requestValidationSchema from "./request";
 import { getQuery, formatResult } from '../../../db/sql_queries/getWallPostsForUser';
 
 export default async (request) => {
@@ -11,7 +11,7 @@ export default async (request) => {
     const userId = tokenData.UserName;
 
 		// Validate Parameters
-		const { path, query, body } = await validateIncomingParameters(request, parameters);
+		const { path, query, body } = await validateIncomingParameters(request, requestValidationSchema);
 
 		const { regionId } = path;
     const sortDirection = query.sort_direction;
@@ -30,7 +30,10 @@ export default async (request) => {
 
 		// If no regions, return empty array
     if(regionIds.length === 0){
-      return formatSuccessResponse(request, [], 200);
+      return formatSuccessResponse(request, {
+        data: [],
+        statusCode: 200,
+      });
     }
 
 		// Get All Users for regions

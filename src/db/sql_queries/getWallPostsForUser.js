@@ -1,5 +1,5 @@
 export const getQuery = (userIdArray, sortDirection, max, offset) => {
-	console.log('userIdArray, sortDirection, max',userIdArray, sortDirection, max);
+
 		const SELECT = max !== -1 && offset === 0 ? `SELECT TOP (${max})` : 'SELECT';
     const inClause = userIdArray.map((userId) => `'${userId}'`).join(',');
   return `
