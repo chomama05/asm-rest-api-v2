@@ -6,7 +6,7 @@
 	"$schema": "node_modules/wrangler/config-schema.json",
 	"name": "asportsmanager-api-cf",
 	"main": "src/index.js",
-	"compatibility_date": "2025-10-31",
+	"compatibility_date": "2025-10-11",
 	"compatibility_flags": ["nodejs_compat"],
 	"observability": {
 		"enabled": true
