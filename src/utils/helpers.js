@@ -38,9 +38,9 @@ console.log('formatSuccessResponse', request, dataOrOptions, statusCodeParam);
 	const origin = request.headers.get('Origin');
 	headers['Access-Control-Allow-Origin'] = origin || '*';
 	headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS, PATCH';
-	headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization';
+	headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization, x-session-token, X-Session-Token, x-username, X-Username';
 	headers['Access-Control-Allow-Credentials'] = 'true';
-
+console.log('headers', JSON.stringify(headers, null, 2));
 	// Response validation (if schema provided)
 	if (responseSchema) {
 		const validationMode = process.env.RESPONSE_VALIDATION || 'disabled';
@@ -139,7 +139,7 @@ console.log('formatErrorResponse', request, error);
 	headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS, PATCH';
 	headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization';
 	headers['Access-Control-Allow-Credentials'] = 'true';
-
+console.log('headers', JSON.stringify(headers, null, 2));
 	return Response.json(errorObject, {
 		status: statusCode,
 		headers: headers,

@@ -36,8 +36,9 @@ export function createRouter(env) {
 		const origin = request.headers.get('Origin');
 		headers['Access-Control-Allow-Origin'] = origin || '*';
 		headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS, PATCH';
-		headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization';
+		headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization, x-session-token, X-Session-Token, x-username, X-Username';
 		headers['Access-Control-Allow-Credentials'] = 'true';
+console.log('headers', JSON.stringify(headers, null, 2));
 		return new Response('OK', { status: 200, headers: headers });
 	});
 
