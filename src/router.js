@@ -29,9 +29,17 @@ export function createRouter(env) {
 	setupHealthRoutes(router);
 	setupActionsRoutes(router);
 
-	// CORS Options TODO
+	// CORS Options handler for preflight requests
 	router.options('*', (request) => {
-		return new Response('OK', { status: 200 });
+		const headers = { 'Content-Type': 'application/json' };
+		// Add CORS Headers - use specific origin when credentials are involved
+		const origin = request.headers.get('Origin');
+		headers['Access-Control-Allow-Origin'] = origin || '*';
+		headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS, PATCH';
+		headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization, x-session-token, X-Session-Token, x-username, X-Username';
+		headers['Access-Control-Allow-Credentials'] = 'true';
+console.log('headers', JSON.stringify(headers, null, 2));
+		return new Response('OK', { status: 200, headers: headers });
 	});
 
 	// 404 handler for unmatched routes
