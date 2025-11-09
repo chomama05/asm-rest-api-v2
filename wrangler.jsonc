@@ -67,6 +67,7 @@
 			],
 		},
 		"production": {
+			"placement": { "mode": "smart" },
 			"route": {
 				"custom_domain": true,
         "pattern": "api.asportsmanager.io"
@@ -101,7 +102,7 @@
 	 * Enabling smart placement routes workers closer to resources they connect to (like databases)
 	 * This may help with connection issues during automatic deployments
 	 */
-	"placement": { "mode": "smart" },
+	//"placement": { "mode": "smart" },
 	/**
 	 * Bindings
 	 * Bindings allow your Worker to interact with resources on the Cloudflare Developer Platform, including
