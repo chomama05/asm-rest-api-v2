@@ -9,6 +9,7 @@ import getWallPostsForUserController from '../controllers/actions/getWallPostsFo
 import getMasterScheduleRefereeEventsController from '../controllers/actions/getMasterScheduleRefereeEvents/GET';
 import getMasterScheduleFormDataController from '../controllers/actions/getMasterScheduleFormData/GET';
 import getMasterScheduleAssignRegionUsersController from '../controllers/actions/getMasterScheduleAssignRegionUsers/GET';
+import getMasterScheduleAssignRegionUsersAvailabilityController from '../controllers/actions/getMasterScheduleAssignRegionUsersAvailability/GET';
 
 // POST
 import loginController from '../controllers/actions/login/POST';
@@ -46,6 +47,9 @@ export function setupActionsRoutes(router) {
 
 	// GET /actions/master-schedule-assign-region-users - Get region users for assigning to schedule
 	router.get('/actions/master-schedule-assign-region-users/:regionId', getMasterScheduleAssignRegionUsersController);
+
+	// GET /actions/master-schedule-assign-region-users-availability - Get region users with availability & conflicts for a specific schedule
+	router.get('/actions/master-schedule-assign-region-users-availability/:regionId/:scheduleId', getMasterScheduleAssignRegionUsersAvailabilityController);
 
 	/*
 		POST Endpoints
