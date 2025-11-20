@@ -125,6 +125,7 @@ const ScheduleAssociations = {
       modelName: 'RegionLeague',
       foreignKey: 'LeagueId',
       targetKey: 'LeagueId',
+      as: 'RegionLeague',
     },
     {
       modelName: 'ScheduleVersion',
@@ -134,7 +135,7 @@ const ScheduleAssociations = {
     },
     {
       modelName: 'Team',
-      as: 'HomeTeamAssociation', 
+      as: 'HomeTeamAssociation',
       foreignKey: 'HomeTeam',
     },
     {
@@ -145,7 +146,8 @@ const ScheduleAssociations = {
     {
       modelName: 'Park',
       foreignKey: 'ParkId',
-      sourceKey: 'ParkId',
+      // sourceKey: 'ParkId',
+			as: 'ParkAssociation',
     },
   ],
   hasMany: [

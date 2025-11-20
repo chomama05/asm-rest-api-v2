@@ -70,6 +70,7 @@ const ParkAssociations = {
       modelName: 'Schedule',
       foreignKey: 'ParkId',
       sourceKey: 'ParkId',
+			as: 'Schedules'
     },
   ],
 };

@@ -7,6 +7,7 @@ import { formatSuccessResponse, formatErrorResponse } from '../utils/helpers.js'
 // GET
 import getWallPostsForUserController from '../controllers/actions/getWallPostsForUser/GET';
 import getMasterScheduleRefereeEventsController from '../controllers/actions/getMasterScheduleRefereeEvents/GET';
+import getMyScheduleRefereeEventsController from '../controllers/actions/getMyScheduleRefereeEvents/GET';
 import getMasterScheduleFormDataController from '../controllers/actions/getMasterScheduleFormData/GET';
 import getMasterScheduleAssignRegionUsersController from '../controllers/actions/getMasterScheduleAssignRegionUsers/GET';
 import getMasterScheduleAssignRegionUsersAvailabilityController from '../controllers/actions/getMasterScheduleAssignRegionUsersAvailability/GET';
@@ -40,6 +41,10 @@ export function setupActionsRoutes(router) {
 	// GET /actions/master-schedule-referee-events - Get master schedule referee events (regionId optional)
 	router.get('/actions/master-schedule-referee-events/:regionId', getMasterScheduleRefereeEventsController);
 	router.get('/actions/master-schedule-referee-events', getMasterScheduleRefereeEventsController);
+
+	// GET /actions/my-schedule-referee-events - Get my schedule referee events (regionId optional)
+	router.get('/actions/my-schedule-referee-events/:regionId', getMyScheduleRefereeEventsController);
+	router.get('/actions/my-schedule-referee-events', getMyScheduleRefereeEventsController);
 
 	// GET /actions/master-schedule-form-data - Get master schedule form data (regionId optional)
 	router.get('/actions/master-schedule-form-data/:regionId', getMasterScheduleFormDataController);

@@ -82,11 +82,13 @@ const TeamAssociations = {
       modelName: 'Schedule',
       foreignKey: 'HomeTeam',
       sourceKey: 'TeamId',
+      as: 'HomeSchedules'
     },
     {
       modelName: 'Schedule',
       foreignKey: 'AwayTeam',
       sourceKey: 'TeamId',
+      as: 'AwaySchedules'
     },
   ]
 };
