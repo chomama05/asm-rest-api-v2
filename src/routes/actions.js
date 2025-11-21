@@ -13,6 +13,7 @@ import getMasterScheduleAssignRegionUsersController from '../controllers/actions
 import getMasterScheduleAssignRegionUsersAvailabilityController from '../controllers/actions/getMasterScheduleAssignRegionUsersAvailability/GET';
 import getRegionUsersController from '../controllers/actions/getRegionUsers/GET';
 import getUserManagementFormDataController from '../controllers/actions/getUserManagementFormData/GET';
+import getUserBasicInformationController from '../controllers/actions/getUserBasicInformation/GET';
 
 // POST
 import loginController from '../controllers/actions/login/POST';
@@ -63,6 +64,9 @@ export function setupActionsRoutes(router) {
 
 	// GET /actions/user-management-form-data/:regionId - Get form data for the user management page (requires executive or canViewMasterSchedule permissions)
 	router.get('/actions/user-management-form-data/:regionId', getUserManagementFormDataController);
+
+	// GET /actions/get-user-basic-information - Get basic information for authenticated user
+	router.get('/actions/get-user-basic-information', getUserBasicInformationController);
 
 	/*
 		POST Endpoints
