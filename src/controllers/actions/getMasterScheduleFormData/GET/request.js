@@ -1,12 +1,13 @@
 import { z } from 'zod';
+import { parseBooleanQueryParam } from '../../../../utils/helpers.js';
 
 export const path = {
 	regionId: z.string().optional().transform((val) => val === '' ? null : val).default(null),
 };
 
 export const query = {
-	show_archived: z.coerce.boolean().optional().default(false),
-	force_refresh: z.coerce.boolean().optional().default(false),
+	show_archived: parseBooleanQueryParam(),
+	force_refresh: parseBooleanQueryParam(),
 };
 
 export const body = {

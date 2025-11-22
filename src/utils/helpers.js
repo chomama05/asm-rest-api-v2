@@ -264,6 +264,17 @@ const preprocessQueryData = (queryData) => {
 	return processed;
 };
 
+// Helper function to properly parse boolean query parameters
+// Handles string "false" correctly (z.coerce.boolean() treats "false" as truthy)
+export const parseBooleanQueryParam = () => {
+	return z.union([z.string(), z.boolean()]).optional().transform((val) => {
+		if (val === undefined || val === null) return false;
+		if (typeof val === 'boolean') return val;
+		const lower = String(val).toLowerCase();
+		return lower === 'true' || lower === '1';
+	}).default(false);
+};
+
 // Helper function to format Zod errors
 const formatZodError = (error) => {
 	if (error instanceof z.ZodError && error.errors && error.errors.length > 0) {
